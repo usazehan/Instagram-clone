@@ -1,4 +1,3 @@
-import React from 'react'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Platform, PixelRatio } from 'react-native'
@@ -10,19 +9,22 @@ const icons = {
     'ios-search': [navIconSize, Ionicons]
 }
 const iconsMap = {};
-const iconsLoaded = new Promise((resolve, reject) => {
-    new Promise.all(
-        Object.keys(icons).map(iconName => {
-            const Provider = icons[iconName][1]
-            return Provider.getImageSource(
-                iconName.replace(replaceSuffixPattern, ''),
-                icons[iconName][0]
-            )
-        })
-    ).then(sources => {
-        Object.keys(icons).forEach((iconName, i)=> iconsMap[iconName] = sources[i])
-        resolve(true)
-    })
-})
+const iconsLoaded = () => 
+    new Promise((resolve) => {
+        new Promise.all(
+            Object.keys(icons).map(iconName => {
+                const Provider = icons[iconName][1]
+                return Provider.getImageSource(
+                    iconName.replace(replaceSuffixPattern, ''),
+                    icons[iconName][0]
+                )
+            })
+        ).then(sources => {
+            Object.keys(icons).forEach(
+                (iconName, i) => (iconsMap[iconName] = sources[i]),
+            );
+            resolve(true)
+        });
+    });
 
 export {iconsMap, iconsLoaded}
