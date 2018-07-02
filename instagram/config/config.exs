@@ -22,6 +22,12 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
+# Configures Guardian
+config :instagram, InstagramWeb.Auth.Guardian,
+  issuer: "instagram",
+  verify_issuer: true,
+  secret_key: "C15f6nIiMpRirW4/69PqE09Qls7MscLBN1qL9Se2xqbVxLGNj+HFD6BQ8amNP77H"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
