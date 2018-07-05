@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, StatusBar, TextInput} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, TextInput, AsyncStorage, ActivityIndicator} from 'react-native';
 import { iOSColors, human, systemWeights } from 'react-native-typography';
 import { fonts} from '../../utils/themes';
 import LinearGradient from 'react-native-linear-gradient';
 import Touchable from '@appandflow/touchable';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {LoginManager, AccessToken} from 'react-native-fbsdk';
+import gql from 'graphql-tag';
+import {graphql} from 'react-apollo';
+import {authToken} from '../../utils/constants';
+import {startMainApp} from '../../Nav';
 
 const COLORS_GRADIENTS = ['#743980', '#56499E'];
 const styles = StyleSheet.create({
@@ -46,6 +51,7 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
+        padding: 0,
     },
     loginBtn: {
         height: 45,
@@ -122,8 +128,42 @@ const styles = StyleSheet.create({
 });
 
 class LoginScreen extends Component {
-    state = {};
+    state = {
+        loading: false,
+    };
+    _onLoginFbPress = async () => {
+        this.setState({loading: true});
+        const res = await LoginManager.logInWithReadPermissions(['public_profile', 'email']);
+        if (res.grantedPermissions && !res.isCancelled) {
+            const data = await AccessToken.getCurrentAccessToken();
+            if(data){
+                const serverResponse = await this.props.loginMutation({
+                    variables: {
+                        provider: 'FACEBOOK',
+                        token: data.accessToken,
+                    },
+                });
+                const {token} = serverResponse.data.login;
+                try {
+                    await AsyncStorage.setItem(authToken, token);
+                    this.setState({loading: false});
+                    startMainApp();
+                } catch(error) {
+                    throw error;
+                }
+            }
+
+
+        }
+    };
     render() {
+        if(this.state.loading) {
+            return (
+                <View style={styles.root}>
+                    <ActivityIndicator size = "large" color="#318DEE"/>
+                </View>
+            )
+        }
         return (
             <View style={styles.root}>
                 <StatusBar barStyle="light-content" />
@@ -172,5 +212,12 @@ class LoginScreen extends Component {
         );
     }
 }
+const loginMutation = gql`
+    mutation($provider: Provider, $token: String) {
+        login(provider: $provider, token: $token) {
+            token
+        }
+    }
+`;
 
-export default LoginScreen;
+export default graphql(loginMutation, {name: 'loginMutation'})(LoginScreen);
