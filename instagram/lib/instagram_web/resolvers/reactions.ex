@@ -5,4 +5,10 @@ defmodule InstagramWeb.Resolvers.Reactions do
             {:ok, message}
         end
     end
+
+    def viewer_like_photo(%{id: id}, _, %{context: %{current_user: current_user}}) do
+        with {:ok, message} <- Reactions.viewer_like_photo(id, current_user.id) do
+            {:ok, message}
+        end
+    end
 end

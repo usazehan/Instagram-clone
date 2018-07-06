@@ -42,7 +42,7 @@ class PhotoCard extends Component {
     state = { };
     _onLikedPress = async () => {
         console.log('=======================================');
-        console.log('you liked me');
+        console.log('you liked me', this.props);
         console.log('=======================================');
         try {
             const res = await this.props.likePhotoMutation({
@@ -64,7 +64,7 @@ class PhotoCard extends Component {
             <View style={styles.root}>
                 <Header />
                 <Image style={styles.img} source={{uri: this.props.data.imageUrl,}}/>
-                <ActionBtns _onLikedPress={this._onLikedPress} />
+                <ActionBtns viewerLike={this.props.data.viewerLike} onLikedPress={this._onLikedPress} />
                 <Meta caption={this.props.data.caption} />
                 <View style={styles.commentsWrapper}>
                     <Touchable feedback="opacity">
