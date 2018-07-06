@@ -7,7 +7,9 @@ import Touchable from '@appandflow/touchable';
 import {human, iOSColors} from 'react-native-typography';
 import CommentInput from '../CommentInput';
 import {graphql} from 'react-apollo';
-import {likePhoto} from '../../graphql/mutations';
+import {likePhotoMutation} from '../../graphql/mutations';
+import { FeedsPhotoFragment } from '../../screens/FeedsScreen/fragments';
+import {defaultDataIdFromObject} from 'apollo-cache-inmemory';
 
 const styles = StyleSheet.create({
     root: {
@@ -40,24 +42,8 @@ const styles = StyleSheet.create({
 
 class PhotoCard extends Component {
     state = { };
-    _onLikedPress = async () => {
-        console.log('=======================================');
-        console.log('you liked me', this.props);
-        console.log('=======================================');
-        try {
-            const res = await this.props.likePhotoMutation({
-                variables: {
-                    photoId: this.props.data.id,
-                },
-            });
-            console.log('=======================================');
-            console.log('error:', res);
-            console.log('=======================================');
-        } catch (error) {
-            console.log('=======================================');
-            console.log('error:', error);
-            console.log('=======================================');
-        }
+    _onLikedPress = () => {
+        this.props.onLikePhotoMuation();
     };
     render() {
         return (
@@ -80,4 +66,30 @@ class PhotoCard extends Component {
     }
 }
 
-export default graphql(likePhoto, {name: 'likePhotoMutation'})(PhotoCard);
+export default graphql(likePhotoMutation, {
+    props: ({ mutate, ownProps }) => ({
+        onLikePhotoMutation: () => mutate({
+            variables: {
+            photoId: ownProps.data.id,
+            },
+            update: (store, { data: { likePhoto } }) => {
+                const id = defaultDataIdFromObject({
+                    __typename: 'Photo',
+                    id: ownProps.data.id,
+                });
+                const photo = store.readFragment({
+                    id,
+                    fragment: FeedsPhotoFragment,
+                });  
+                store.writeFragment({
+                    id,
+                    fragment: FeedsPhotoFragment,
+                    data: {
+                        ...photo,
+                        viewerLike: likePhoto,
+                    },
+                });
+            },
+        }),
+    }),
+  })(PhotoCard);

@@ -3,6 +3,7 @@ import { FlatList, ActivityIndicator, StyleSheet, View, RefreshControl} from 're
 import {PhotoCard} from '../../components';
 import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
+import { FeedsPhotoFragment } from './fragments';
 
 const styles = StyleSheet.create({
     loadingWrapper: {
@@ -38,22 +39,20 @@ class FeedsScreen extends Component {
                 keyExtractor={this._keyExtractor}
                 renderItem={this._renderItem}
                 refreshControl = {
-                    <refreshControl refreshing={this.state.isRefreshing} onRefresh={this._refreshRequest}/>
+                    <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this._refreshRequest}/>
                 }
             />
         );
     }
 }
 
-const getPhotos = gql `
+const getPhotos = gql`
     query {
         photos {
-            id
-            imageUrl
-            caption
-            viewerLike
+            ...feedsPhoto
         }
     }
-`
+    ${FeedsPhotoFragment}
+`;
 
 export default graphql(getPhotos)(FeedsScreen);
