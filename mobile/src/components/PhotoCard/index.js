@@ -6,6 +6,8 @@ import Meta from './Meta';
 import Touchable from '@appandflow/touchable';
 import {human, iOSColors} from 'react-native-typography';
 import CommentInput from '../CommentInput';
+import {graphql} from 'react-apollo';
+import {likePhoto} from '../../graphql/mutations';
 
 const styles = StyleSheet.create({
     root: {
@@ -37,13 +39,32 @@ const styles = StyleSheet.create({
 });
 
 class PhotoCard extends Component {
-    state = { }
+    state = { };
+    _onLikedPress = async () => {
+        console.log('=======================================');
+        console.log('you liked me');
+        console.log('=======================================');
+        try {
+            const res = await this.props.likePhotoMutation({
+                variables: {
+                    photoId: this.props.data.id,
+                },
+            });
+            console.log('=======================================');
+            console.log('error:', res);
+            console.log('=======================================');
+        } catch (error) {
+            console.log('=======================================');
+            console.log('error:', error);
+            console.log('=======================================');
+        }
+    };
     render() {
         return (
             <View style={styles.root}>
                 <Header />
                 <Image style={styles.img} source={{uri: this.props.data.imageUrl,}}/>
-                <ActionBtns />
+                <ActionBtns _onLikedPress={this._onLikedPress} />
                 <Meta caption={this.props.data.caption} />
                 <View style={styles.commentsWrapper}>
                     <Touchable feedback="opacity">
@@ -59,4 +80,4 @@ class PhotoCard extends Component {
     }
 }
 
-export default PhotoCard;
+export default graphql(likePhoto, {name: 'likePhotoMutation'})(PhotoCard);
