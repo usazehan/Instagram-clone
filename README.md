@@ -3,9 +3,9 @@ Only worked on the Android side of the application. However, feel free to config
 ## To-Do
 ~~Authentication with Facebook (Login Page)~~
 
-Like photos
+~~Like photos~~
 
-Create a new photo
+Create a new photo (working on this)
 
 Comment on photos
 
