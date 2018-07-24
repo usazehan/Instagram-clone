@@ -34,7 +34,7 @@ config :ex_aws,
   secret_access_key: System.get_env("AWS_SECRET_ACCESS_KEY"),
   s3: [
     scheme: "https://",
-    host: "instagram-clone-beta.s3.amazonaws.com",
+    host: "instagram-clone-01.s3.amazonaws.com",
     region: "us-east-1"
   ] 
 

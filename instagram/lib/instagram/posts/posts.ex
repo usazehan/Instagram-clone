@@ -48,6 +48,6 @@ defmodule Instagram.Posts do
   end
 
   defp get_image_url(bucket, uuid) do
-    "https://s3.amazonaws.com/instagram-clone-beta/#{bucket}/#{uuid}.jpg"
+    "https://s3.amazonaws.com/instagram-clone-01/#{bucket}/#{uuid}.jpg"
   end
 end
