@@ -11,6 +11,7 @@ defmodule Instagram.Accounts.User do
     field :last_name, :string
     field :username, :string
 
+    has_many :photos, Instagram.Posts.Photo
     has_many :like_photos, Instagram.Reactions.LikePhoto
 
     timestamps()
@@ -20,7 +21,7 @@ defmodule Instagram.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:username, :avatar, :facebook_id, :email, :first_name, :last_name])
-    |> validate_required([:avatar, :facebook_id, :email, :first_name, :last_name])
+    |> validate_required([:avatar, :facebook_id, :email])
     |> unique_constraint(:email)
     |> unique_constraint(:facebook_id)
   end

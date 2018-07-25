@@ -11,4 +11,11 @@ defmodule InstagramWeb.Resolvers.Posts do
   def presign_url(_, _, _) do
     {:ok, Posts.get_presign_url}
   end
+
+  def create_photo(_, args, %{context: %{current_user: current_user}}) do
+    args = Map.merge(args, %{user_id: current_user.id})
+    with {:ok, photo} <- Posts.create_photo(args) do
+      {:ok, photo}
+    end
+  end
 end
