@@ -4,6 +4,7 @@ import {PhotoCard} from '../../components';
 import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
 import { FeedsPhotoFragment } from './fragments';
+import {iconsMap} from '../../utils/themes';
 
 const styles = StyleSheet.create({
     loadingWrapper: {
@@ -14,9 +15,36 @@ const styles = StyleSheet.create({
 });
 
 class FeedsScreen extends Component {
-    state = {
-        isRefreshing: false,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            isRefreshing: false,
+        };
+        props.navigator.setOnNavigatorEvent(this._onNavigatorEvent.bind(this)); 
+    }
+
+    componentWillMount() {
+        this.props.navigator.setButtons({
+            leftButtons: [
+                {
+                    id: 'camera',
+                    icon: iconsMap.camera,
+                },
+            ],
+        });
+    }
+    _onNavigatorEvent(e) {
+        if (e.type === 'NavBarButtonPress') {
+            if (e.id === 'camera') {
+                this.props.navigator.showModal({
+                    screen: 'instagramclone.CreatePhotoScreen',
+                    title: 'Choose a photo',
+                    animationType: 'slide-up',
+                });
+            }
+        }
+    }
+
     _keyExtractor = (item) => item.id
     _renderItem = ({item}) => <PhotoCard data={item} />
     _refreshRequest = async() => {
