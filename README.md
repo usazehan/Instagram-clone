@@ -5,9 +5,9 @@ Only worked on the Android side of the application. However, feel free to config
 
 ~~Like photos~~
 
-Create a new photo (working on this)
+~~Create a new photo~~
 
-Comment on photos
+Comment on photos (working on this)
 
 Feature tags
 
