@@ -9,5 +9,9 @@ const makeHitSlop = size => ({
     top: size,
     bottom: size,
 });
+const centerElement = {
+    justifyContent: 'center',
+    alignItems: 'center',
+}
 
-export { makeCircle, makeHitSlop};
+export { makeCircle, makeHitSlop, centerElement};
