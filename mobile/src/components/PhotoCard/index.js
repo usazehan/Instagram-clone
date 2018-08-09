@@ -50,8 +50,11 @@ class PhotoCard extends Component {
             screen: 'instagramclone.CommentsScreen',
             title: 'Comments',
             passProps: {
-                photoId: this.props.id,
-            }
+                photoId: this.props.data.id,
+            },
+            navigatorStyle: {
+                tabBarHidden: true,
+            },
         });
     };
     render() {

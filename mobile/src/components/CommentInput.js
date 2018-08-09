@@ -46,7 +46,10 @@ class CommentInput extends Component {
             title: 'Comments',
             passProps: {
                 photoId: this.props.photoId,
-            }
+            },
+            navigatorStyle: {
+                tabBarHidden: true,
+            },
         });
     };
     render() {
