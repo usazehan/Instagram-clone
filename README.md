@@ -5,9 +5,9 @@ Authentication with Facebook (Login Page)
 
 Like photos
 
-Create a new photo
+Create and save photos
 
 Comment on photos
 ## To-Do
-Feature tags
+Creating the tag functionality for the photos
 
