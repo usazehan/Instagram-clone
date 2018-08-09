@@ -8,14 +8,16 @@ import {
     TextInput,
     Image,
     KeyboardAvoidingView,
-    Alert
+    Animated,
 } from 'react-native';
-import {Query} from 'react-apollo';
+import {Query, graphql} from 'react-apollo';
 import gql from 'graphql-tag';
-import {Comment} from '../../components';
+import {Comment, ListSpacer} from '../../components';
 import {fakeAvatar} from '../../utils/constants';
 import {makeCircle, colors} from '../../utils/themes';
+import {createCommentMutation} from '../../graphql/mutations';
 
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const INPUT_HEIGHT = 60;
 const GET_COMMENTS = gql`
     query Comments($photoId: ID!) {
@@ -44,6 +46,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: colors.lightGray,
+        backgroundColor: '#fff',
     },
     avatar: {
         ...makeCircle(40),
@@ -65,11 +68,15 @@ const styles = StyleSheet.create({
         right: 0,
         left: 0,
     },
+    contentList: {
+        paddingTop: INPUT_HEIGHT * 2,
+    },
 });
 
 class CommentsScreen extends PureComponent {
     state = {
         comment: '',
+        
     };
     componentDidMount() {
         setTimeout(() => {
@@ -80,7 +87,7 @@ class CommentsScreen extends PureComponent {
     _renderItem = ({item}) => <Comment {...item}/>;
     _handleChange = comment => this.setState({comment});
     _onSubmit  = () => {
-        Alert.alert('Your Comment is', this.state.comment);
+        this.props.onCreateComment(this.state.comment);
         this.setState({
             comment: '',
         });
@@ -108,11 +115,20 @@ class CommentsScreen extends PureComponent {
                         );
                     }
                     return (
-                        <FlatList 
-                            data={data.comments}
-                            keyExtractor={this._keyExtractor}
-                            renderItem={this._renderItem}
-                        />
+                        <ListSpacer>
+                            {({flatListHeight}) => (
+                                <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={INPUT_HEIGHT}>
+                                    <AnimatedFlatList 
+                                        inverted
+                                        data={data.comments}
+                                        keyExtractor={this._keyExtractor}
+                                        renderItem={this._renderItem}
+                                        contentContainerStyle={styles.contentList}
+                                        style={{height: flatListHeight}}
+                                    />
+                                </KeyboardAvoidingView>
+                            )}  
+                        </ListSpacer>
                     );
                 }}
             </Query>
@@ -141,4 +157,41 @@ class CommentsScreen extends PureComponent {
     }
 }
 
-export default CommentsScreen;
+export default graphql(createCommentMutation, {
+    props: ({mutate, ownProps}) => ({
+        onCreateComment: text => mutate({
+            variables: {
+                text,
+                photoId: ownProps.photoId,
+            },
+            optimisticResponse: {
+                __typename: 'Mutation',
+                createComment: {
+                    id: Math.round(Math.random() * -1000000000),
+                    __typename: 'Comment',
+                    insertedAt: new Date(),
+                    text,
+                    user: { // you have to put your own default since this just a prototype
+                        __typename: 'User',
+                        id: 'User:1',
+                        username: 'Zehan',
+                        avatar: fakeAvatar,
+                    },
+                },
+            },
+            update: (store, {data: {createComment}}) => {
+                const  data = store.readQuery({
+                    query: GET_COMMENTS,
+                    variables: {photoId: ownProps.photoId},
+                });
+                store.writeQuery({
+                    query: GET_COMMENTS,
+                    variables: {photoId: ownProps.photoId},
+                    data: {
+                        comments: [createComment, ...data.comments],
+                    },
+                });
+            },
+        }),
+    }),
+})(CommentsScreen);
