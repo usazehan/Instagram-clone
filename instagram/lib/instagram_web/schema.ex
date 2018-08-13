@@ -24,6 +24,13 @@ defmodule InstagramWeb.Schema do
       middleware Middleware.Authorize
       resolve &Resolvers.Posts.presign_url/3
     end
+
+    @desc "Get all comments for a photo"
+    field :comments, non_null(list_of(:comment)) do
+      arg :photo_id, non_null(:id)
+      middleware Middleware.Authorize
+      resolve &Resolvers.Posts.get_comments/3
+    end
   end
 
   mutation do
