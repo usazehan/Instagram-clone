@@ -37,6 +37,11 @@ defmodule InstagramWeb.Schema do
       arg :name, non_null(:string)
       resolve &Resolvers.Posts.search_tag/3
     end
+
+    @desc "Get list of tag"
+    field :tags, non_null(list_of(:tag)) do
+      resolve &Resolvers.Posts.get_tags/3
+    end
   end
 
   mutation do

@@ -11,7 +11,8 @@ defmodule InstagramWeb.Schema.PostsTypes do
       field :viewer_like, non_null(:boolean) do
         resolve &Resolvers.Reactions.viewer_like_photo/3
       end
-  
+      
+      field :tags, non_null(list_of(:tag)), resolve: assoc(:tags)
       field :inserted_at, non_null(:string)
       field :updated_at, non_null(:string)
     end
