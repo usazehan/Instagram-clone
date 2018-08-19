@@ -1,10 +1,10 @@
-defmodule InstagramWeb.Schema do
+defmodule InstagramWeb.GraphQL.Schema do
   use Absinthe.Schema
-  alias InstagramWeb.Resolvers
-  alias InstagramWeb.Schema.Middleware
+  alias InstagramWeb.GraphQL.Resolvers
+  alias InstagramWeb.GraphQL.Middleware
 
-  import_types __MODULE__.PostsTypes
-  import_types __MODULE__.AccountsTypes
+  import_types InstagramWeb.GraphQL.Types.PostsTypes
+  import_types InstagramWeb.GraphQL.Types.AccountsTypes
 
   query do
     @desc "Get list of photo"

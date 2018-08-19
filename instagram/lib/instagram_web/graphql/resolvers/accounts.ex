@@ -1,4 +1,4 @@
-defmodule InstagramWeb.Resolvers.Accounts do
+defmodule InstagramWeb.GraphQL.Resolvers.Accounts do
     alias InstagramWeb.{Authentication, Auth}
     def login(_, %{token: token, provider: provider}, _) do
         case provider do

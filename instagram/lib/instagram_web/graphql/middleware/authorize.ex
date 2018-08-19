@@ -1,4 +1,4 @@
-defmodule InstagramWeb.Schema.Middleware.Authorize do
+defmodule InstagramWeb.GraphQL.Middleware.Authorize do
     @behaviour Absinthe.Middleware
     def call(resolution, _) do
         with %{current_user: current_user} <- resolution.context do

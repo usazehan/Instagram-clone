@@ -1,8 +1,7 @@
-defmodule InstagramWeb.Schema.PostsTypes do
+defmodule InstagramWeb.GraphQL.Types.PostsTypes do
     use Absinthe.Schema.Notation
     use Absinthe.Ecto, repo: Instagram.Repo
-    import Ecto.Query
-    alias InstagramWeb.Resolvers
+    alias InstagramWeb.GraphQL.Resolvers
 
     object :photo do
       field :id, non_null(:id)
