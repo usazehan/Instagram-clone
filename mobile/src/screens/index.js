@@ -6,6 +6,7 @@ import WithProvider from '../components/WithProvider';
 import CreatePhotoScreen from './CreatePhotoScreen';
 import CaptionScreen from './CaptionScreen';
 import CommentsScreen from './CommentsScreen';
+import TagScreen from './TagScreen';
 
 export const registerScreens = () => {
     Navigation.registerComponent('instagramclone.FeedsScreen', () => WithProvider(FeedsScreen));
@@ -14,5 +15,6 @@ export const registerScreens = () => {
     Navigation.registerComponent('instagramclone.CreatePhotoScreen', () => WithProvider(CreatePhotoScreen));
     Navigation.registerComponent('instagramclone.CaptionScreen', () => WithProvider(CaptionScreen));
     Navigation.registerComponent('instagramclone.CommentsScreen', () => WithProvider(CommentsScreen));
+    Navigation.registerComponent('instagramclone.TagScreen', () => WithProvider(TagScreen));
 
 }

@@ -55,6 +55,7 @@ class CreatePhotoScreen extends PureComponent {
                 this.props.navigator.push({
                     screen: 'instagramclone.CaptionScreen',
                     title: 'New Post',
+                    backButtonTitle: 'Back',
                     passProps: {
                         image: this.state.selected,
                     }
@@ -75,7 +76,7 @@ class CreatePhotoScreen extends PureComponent {
             loading: false,
             firstQuery: false,
             hasNextPage: res.page_info.has_next_page,
-            endCursor: res.has_next_page.endCursor,
+            endCursor: res.page_info.end_cursor,
         });
     };
     _renderItem = ({item}) => {
